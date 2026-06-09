@@ -1,0 +1,81 @@
+redis:
+  url: ""                          # paste Redis Cloud connection string here
+  streams:
+    bot_metrics: "watchdog:bot_metrics"
+    anomalies: "watchdog:anomalies"
+    diagnoses: "watchdog:diagnoses"
+    actions: "watchdog:actions"
+    regime: "regime:current"
+
+binance:
+  symbol: "BTC/USDT"
+  timeframe: "1h"
+  history_days: 90
+  api_key: ""
+  api_secret: ""
+  replay_speed_seconds: 5          # seconds per candle in replay
+
+bot:
+  ema_fast: 9
+  ema_slow: 21
+  rsi_period: 14
+  rsi_threshold: 50
+  stop_loss_pct: 0.02
+  risk_per_trade_pct: 0.01
+  initial_capital: 10000.0
+
+metrics:
+  publish_interval_seconds: 30
+  baseline_trades: 50              # trades needed to establish baseline
+  anomaly_zscore_threshold: 2.0
+  rolling_win_rate_window: 50
+  rolling_fill_rate_window: 20
+  rolling_slippage_window: 20
+
+anomaly_injection:
+  enabled: true
+  slippage_spike:
+    trigger_trade: 80
+    duration_trades: 20
+    multiplier: 8.0
+  win_rate_decay:
+    trigger_trade: 150
+    duration_trades: 30
+    flip_probability: 0.4
+  overtrading:
+    trigger_trade: 220
+    duration_trades: 20
+    frequency_multiplier: 3.0
+  drawdown_breach:
+    trigger_trade: 300
+    consecutive_losses: 5
+
+ollama:
+  base_url: "http://localhost:11434"
+  model: "qwen2.5:3b-instruct-q4_K_M"
+  temperature: 0.1
+  max_tokens: 512
+  timeout_seconds: 60
+
+groq:
+  api_key: ""
+  base_url: "https://api.groq.com/openai/v1"
+  primary_model: "llama-3.1-8b-instant"
+  fallback_model: "mixtral-8x7b-32768"
+  temperature: 0.1
+  max_tokens: 512
+  timeout_seconds: 30
+
+regimeradar:
+  sqlite_path: "../regime_detector+simulations/storage/regime_agent.db"
+  redis_stream: "regime:current"
+
+agent:
+  severity_log_only: [1, 2]
+  severity_human_review: [3]
+  severity_recommend_action: [4]
+  severity_kill_switch: [5]
+
+storage:
+  sqlite_path: "storage/watchdog.db"
+  log_path: "logs/watchdog.log"
